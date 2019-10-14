@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: security2.0-demo
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.us
+Build-Jdk: 1.8.0_77
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: com.us.example.Application
+
