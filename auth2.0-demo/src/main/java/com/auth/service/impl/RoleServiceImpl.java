@@ -8,7 +8,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.auth.entity.Permission;
 import com.auth.entity.Role;
 import com.auth.repository.RoleRepository;
 import com.auth.service.RoleService;

@@ -32,6 +32,11 @@ public class User extends Base implements Serializable {
     private String password;
 
     /**
+     * 用户名
+     */
+    private String name;
+
+    /**
      * 用户 --角色 多对一
      */
     @JsonBackReference

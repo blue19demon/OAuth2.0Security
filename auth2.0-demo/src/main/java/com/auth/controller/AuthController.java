@@ -50,7 +50,7 @@ public class AuthController {
      */
     @PostMapping("user")
     public ResponseVO add(@Valid @RequestBody UserDTO userDTO) throws Exception {
-        userService.addUser(userDTO);
+    	userService.addUser(userDTO);
         return ResponseVO.success();
     }
 

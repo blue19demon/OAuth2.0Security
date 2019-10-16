@@ -1,7 +1,5 @@
 package com.starter.demo;
 
-import java.util.Set;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSONObject;
 import com.auth.Auth2BootDemoApplication;
-import com.auth.entity.Permission;
 import com.auth.entity.User;
 import com.auth.repository.UserRepository;
 import com.auth.service.RoleService;
@@ -33,9 +30,7 @@ public class ApplicationTests {
     	String username="admin";
     	log.info("username:{}",username);
         User user = userRepository.findUserByAccount(username);
-      //从数据库查询资源权限
-  	   Set<Permission> permissions = roleService.findById(user.getRole().getId()).getPermissions();
-  	   log.info(JSONObject.toJSONString(permissions));
+  	    log.info(JSONObject.toJSONString(user));
     }
 
     @Test

@@ -146,6 +146,7 @@ public class UserServiceImpl implements UserService {
                 e.printStackTrace();
                 //此处应该用自定义异常去返回，在这里我就不去具体实现了
                 //throw new Exception("username or password error");
+                return ResponseVO.error(ResponseEnum.INCORRECT_ACCONT_INFO);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

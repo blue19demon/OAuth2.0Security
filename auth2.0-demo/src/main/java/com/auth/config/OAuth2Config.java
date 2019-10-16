@@ -129,7 +129,7 @@ public class OAuth2Config {
             tokenService.setClientDetailsService(endpoints.getClientDetailsService());
             tokenService.setTokenEnhancer(endpoints.getTokenEnhancer());
             //半小时
-            tokenService.setAccessTokenValiditySeconds((int) TimeUnit.SECONDS.toSeconds(30));
+            tokenService.setAccessTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(30));
             //半小时
             tokenService.setRefreshTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(30));
             tokenService.setReuseRefreshToken(false);

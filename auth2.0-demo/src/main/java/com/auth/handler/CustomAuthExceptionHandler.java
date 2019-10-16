@@ -1,5 +1,7 @@
 package com.auth.handler;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +33,7 @@ public class CustomAuthExceptionHandler implements AuthenticationEntryPoint, Acc
 
         Throwable cause = authException.getCause();
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_OK);
         // CORS "pre-flight" request
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Cache-Control","no-cache");
@@ -45,7 +47,9 @@ public class CustomAuthExceptionHandler implements AuthenticationEntryPoint, Acc
         } else {
             log.error("AuthenticationException : NoAuthentication");
             //资源未授权
-            response.getWriter().write(JSON.toJSONString(ResponseVO.error(ResponseEnum.UNAUTHORIZED)));
+            PrintWriter writer = response.getWriter();
+            writer.write(JSON.toJSONString(ResponseVO.error(ResponseEnum.UNAUTHORIZED)));
+            writer.flush();
         }
 
     }
@@ -53,7 +57,7 @@ public class CustomAuthExceptionHandler implements AuthenticationEntryPoint, Acc
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Cache-Control","no-cache");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");

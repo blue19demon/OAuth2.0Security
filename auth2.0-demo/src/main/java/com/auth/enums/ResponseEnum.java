@@ -15,7 +15,10 @@ public enum ResponseEnum {
      * 0 表示返回成功
      */
     SUCCESS(0,"成功"),
-
+    /**
+     * 5001 表示账号密码不正确
+     */
+    INCORRECT_ACCONT_INFO(5001, "账号密码不正确"),
     /**
      * 表示接口调用方异常提示
      */

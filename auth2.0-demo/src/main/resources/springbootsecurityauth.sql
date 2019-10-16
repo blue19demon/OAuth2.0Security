@@ -32,24 +32,3 @@ CREATE TABLE IF NOT EXISTS `um_t_role_user`(
  `user_id` INT(11)
 );
 INSERT IGNORE INTO `um_t_role_user`(role_id,user_id)VALUES(1,1);
-
-/**
-权限表
- */
- CREATE TABLE IF NOT EXISTS `um_t_permission`(
- `id` INT(11) PRIMARY KEY AUTO_INCREMENT ,
- `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
- `description` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
- `url` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
- `pid` INT(11) DEFAULT NULL
-);
-INSERT INTO `um_t_permission` VALUES ('1', 'ROLE_HOME', 'home', '/', null), ('2', 'ROLE_ADMIN', 'ABel', '/admin', null);
-
-/**
-关联表赋值 角色-权限
- */
-CREATE TABLE IF NOT EXISTS `um_t_permission_role`(
-`role_id` INT(11),
-`permission_id` INT(11)
-);
-INSERT INTO `um_t_permission_role` VALUES ('1', '1'), ('1', '2'), ('2', '1');

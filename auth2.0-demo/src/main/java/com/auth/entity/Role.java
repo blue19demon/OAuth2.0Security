@@ -41,11 +41,4 @@ public class Role extends Base implements Serializable {
     @JoinTable(name = "um_t_role_user", joinColumns = {@JoinColumn(name = "roleId")}, inverseJoinColumns = {@JoinColumn(name = "userId")})
     private Set<User> users;
     
-    /**
-     * 角色 -- 资源: 1对多
-     */
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "um_t_permission_role", joinColumns = {@JoinColumn(name = "roleId")}, inverseJoinColumns = {@JoinColumn(name = "permissionId")})
-    private Set<Permission> permissions;
 }

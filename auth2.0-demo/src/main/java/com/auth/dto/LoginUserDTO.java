@@ -1,5 +1,7 @@
 package com.auth.dto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -8,6 +10,8 @@ import lombok.Data;
  * @date 2019/4/19 14:26
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginUserDTO {
 
     /**
