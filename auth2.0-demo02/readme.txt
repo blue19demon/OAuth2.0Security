@@ -1,1 +1,1 @@
-http://127.0.0.1:7777/oauth/authorize?response_type=code&client_id=client_1&redirect_uri=http://127.0.0.1:7777/auth/callBack
+http://127.0.0.1:7777/oauth/authorize?response_type=code&client_id=client_1&redirect_uri=http://127.0.0.1:7777/auth/callBack&appId=OaH1heR2E4eGnBr87Br8F

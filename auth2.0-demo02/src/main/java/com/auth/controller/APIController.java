@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth.dto.LoginUserDTO;
@@ -21,6 +22,12 @@ import com.auth.service.UserService;
 import com.auth.utils.AssertUtils;
 import com.auth.vo.ResponseVO;
 
+/**
+ * 
+ * 授权后要访问的资源
+ * @author Administrator
+ *
+ */
 @RestController
 @RequestMapping("/api")
 public class APIController {
@@ -28,25 +35,48 @@ public class APIController {
 	private UserService userService;
 
 	@Autowired
-	private RoleService roleService;
-
-	@Autowired
 	private RedisTokenStore redisTokenStore;
 
-	@RequestMapping("/blog/{id}")
-	public String getBlogById(@PathVariable long id) {
-		return "this is blog " + id;
-	}
-
-	/**
+	 /**
+   	 * @description 添加用户
+   	 * @param userDTO
+   	 * @return
+   	 */
+   	@GetMapping("/refreshToken")
+   	@ResponseBody
+   	public ResponseVO refreshToken(String refreshToken) throws Exception {
+   		return userService.refreshToken(refreshToken);
+   	}
+   	/**
+   	 * @description 添加用户
+   	 * @param userDTO
+   	 * @return
+   	 */
+   	@GetMapping("/currrentUserInfo")
+	@ResponseBody
+   	public ResponseVO currrentUserInfo(String token) throws Exception {
+   		return userService.currrentUserInfo(token);
+   	}
+   	
+    /**
 	 * @description 添加用户
 	 * @param userDTO
 	 * @return
 	 */
 	@PostMapping("/user")
+	@ResponseBody
 	public ResponseVO add(@Valid @RequestBody UserDTO userDTO) throws Exception {
 		userService.addUser(userDTO);
 		return ResponseVO.success();
+	}
+	/**
+	 * @description 获取用户列表
+	 * @return
+	 */
+	@GetMapping("/userList")
+	@ResponseBody
+	public ResponseVO findAllUser() {
+		return userService.findAllUserVO();
 	}
 
 	/**
@@ -70,26 +100,6 @@ public class APIController {
 		userService.updateUser(userDTO);
 		return ResponseVO.success();
 	}
-
-	/**
-	 * @description 获取用户列表
-	 * @return
-	 */
-	@GetMapping("/user")
-	public ResponseVO findAllUser() {
-		return userService.findAllUserVO();
-	}
-
-	/**
-	 * @description 用户登录
-	 * @param loginUserDTO
-	 * @return
-	 */
-	@PostMapping("/user/login")
-	public ResponseVO login(LoginUserDTO loginUserDTO) {
-		return userService.login(loginUserDTO);
-	}
-
 	/**
 	 * @description 用户注销
 	 * @param authorization
@@ -99,15 +109,6 @@ public class APIController {
 	public ResponseVO logout(@RequestHeader("Authorization") String authorization) {
 		redisTokenStore.removeAccessToken(AssertUtils.extracteToken(authorization));
 		return ResponseVO.success();
-	}
-
-	/**
-	 * @description 获取所有角色列表
-	 * @return
-	 */
-	@GetMapping("/role")
-	public ResponseVO findAllRole() {
-		return roleService.findAllRoleVO();
 	}
 
 }

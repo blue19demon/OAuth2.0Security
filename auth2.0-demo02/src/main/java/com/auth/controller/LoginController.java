@@ -17,9 +17,4 @@ public class LoginController {
 		model.addAttribute("loginProcessUrl", "/auth/authorize");
 		return "login";
 	}
-
-	@RequestMapping("/authConfim")
-	public String authConfim() {
-		return "base-grant";
-	}
 }

@@ -7,7 +7,7 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/auth_test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: root
       password: root
-      schema: classpath:springbootsecurityauth.sql
+      #schema: classpath:springbootsecurityauth.sql
       sql-script-encoding: utf-8
       initialization-mode: always
       driver-class-name: com.mysql.jdbc.Driver

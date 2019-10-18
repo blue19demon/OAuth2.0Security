@@ -39,8 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		//"/oauth/**", "/login/**","/login","/authConfim", "/logout/**"
-		http.requestMatchers().antMatchers("/login", "/auth/authorize","/oauth/authorize").and().authorizeRequests()
+		http.requestMatchers().antMatchers("/login", "/auth/authorize","/oauth/authorize","/oauth/check_token").and().authorizeRequests()
 				.antMatchers("/css/**").permitAll().antMatchers("/oauth/**").authenticated().and().formLogin()
 				.loginPage("/login").failureUrl("/login?error")
 				 // 登录处理url

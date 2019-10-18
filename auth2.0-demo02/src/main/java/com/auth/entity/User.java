@@ -36,6 +36,9 @@ public class User extends Base implements Serializable {
      */
     private String name;
 
+    private String gender;
+
+    private String headImageUrl;
     /**
      * 用户 --角色 多对一
      */

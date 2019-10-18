@@ -59,9 +59,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	private static final String API_PREFIX = "http://127.0.0.1:7777/api";
-	@Autowired
-	private RedisTokenStore redisTokenStore;
+	private static final String API_PREFIX = "http://127.0.0.1:7777/";
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -133,57 +131,6 @@ public class UserServiceImpl implements UserService {
 		return ResponseVO.success(userVOList);
 	}
 
-	@Override
-	public ResponseVO login(LoginUserDTO loginUserDTO) {
-		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<>();
-		paramMap.add("client_id", OAuth2Config.CLIENT_ID);
-		paramMap.add("client_secret", OAuth2Config.CLIENT_SECRET);
-		paramMap.add("username", loginUserDTO.getAccount());
-		paramMap.add("password", loginUserDTO.getPassword());
-		paramMap.add("grant_type", OAuth2Config.GRANT_TYPE[0]);
-		Token token = null;
-		try {
-			// 因为oauth2本身自带的登录接口是"/oauth/token"，并且返回的数据类型不能按我们想要的去返回
-			// 但是我的业务需求是，登录接口是"user/login"，由于我没研究过要怎么去修改oauth2内部的endpoint配置
-			// 所以这里我用restTemplate(HTTP客户端)进行一次转发到oauth2内部的登录接口，比较简单粗暴
-			token = restTemplate.postForObject(serverConfig.getUrl() + UrlEnum.LOGIN_URL.getUrl(), paramMap,
-					Token.class);
-			LoginUserVO loginUserVO = redisUtil.get(token.getValue(), LoginUserVO.class);
-			if (loginUserVO != null) {
-				// 登录的时候，判断该用户是否已经登录过了
-				// 如果redis里面已经存在该用户已经登录过了的信息
-				// 我这边要刷新一遍token信息，不然，它会返回上一次还未过时的token信息给你
-				// 不便于做单点维护
-				token = oauthRefreshToken(loginUserVO.getRefreshToken());
-				redisUtil.deleteCache(loginUserVO.getAccessToken());
-			}
-		} catch (RestClientException e) {
-			try {
-				e.printStackTrace();
-				// 此处应该用自定义异常去返回，在这里我就不去具体实现了
-				// throw new Exception("username or password error");
-				return ResponseVO.error(ResponseEnum.INCORRECT_ACCONT_INFO);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}
-		// 这里我拿到了登录成功后返回的token信息之后，我再进行一层封装，最后返回给前端的其实是LoginUserVO
-		LoginUserVO loginUserVO = new LoginUserVO();
-		User userPO = userRepository.findUserByAccount(loginUserDTO.getAccount());
-		BeanUtils.copyPropertiesIgnoreNull(userPO, loginUserVO);
-		loginUserVO.setPassword(userPO.getPassword());
-		loginUserVO.setAccessToken(token.getValue());
-		loginUserVO.setAccessTokenExpiresIn(token.getExpiresIn());
-		loginUserVO.setAccessTokenExpiration(token.getExpiration());
-		loginUserVO.setExpired(token.isExpired());
-		loginUserVO.setScope(token.getScope());
-		loginUserVO.setTokenType(token.getTokenType());
-		loginUserVO.setRefreshToken(token.getRefreshToken().getValue());
-		loginUserVO.setRefreshTokenExpiration(token.getRefreshToken().getExpiration());
-		// 存储登录的用户
-		redisUtil.set(loginUserVO.getAccessToken(), loginUserVO, TimeUnit.HOURS.toSeconds(1));
-		return ResponseVO.success(loginUserVO);
-	}
 
 	/**
 	 * @description oauth2客户端刷新token
@@ -191,13 +138,14 @@ public class UserServiceImpl implements UserService {
 	 * @date 2019/03/05 14:27:22
 	 * @author Zhifeng.Zeng
 	 * @return
-	 */
-	private Token oauthRefreshToken(String refreshToken) {
+	 */	
+	@Override
+	public ResponseVO<Token> refreshToken(String refreshToken) {
 		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<>();
 		paramMap.add("client_id", OAuth2Config.CLIENT_ID);
 		paramMap.add("client_secret", OAuth2Config.CLIENT_SECRET);
 		paramMap.add("refresh_token", refreshToken);
-		paramMap.add("grant_type", OAuth2Config.GRANT_TYPE[1]);
+		paramMap.add("grant_type", OAuth2Config.GRANT_TYPE[2]);
 		Token token = null;
 		try {
 			token = restTemplate.postForObject(serverConfig.getUrl() + UrlEnum.LOGIN_URL.getUrl(), paramMap,
@@ -210,10 +158,10 @@ public class UserServiceImpl implements UserService {
 				e1.printStackTrace();
 			}
 		}
-		return token;
+		return ResponseVO.success(token);
 	}
 	@Override
-	public ResponseVO getToken(String code) {
+	public ResponseVO<Token> getToken(String code) {
 		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<>();
 		paramMap.add("grant_type", OAuth2Config.GRANT_TYPE[2]);
 		paramMap.add("code", code);
@@ -230,37 +178,16 @@ public class UserServiceImpl implements UserService {
 		return ResponseVO.success(token);
 	}
 	
-	public String getAccessToken(String code) {
-		Token token = redisUtil.get(code, Token.class);
-		if(token==null) {
-			ResponseVO responseVO = getToken(code);
-			token = (Token) responseVO.getData();
-			redisUtil.set(code, token, TimeUnit.SECONDS.toSeconds(token.getExpiresIn()));
-		}
-		log.info("token="+JSONObject.toJSONString(token, true));
-		String authorization = AssertUtils.buildBearerToken(token.getValue());
-		return authorization;
-	}
-
 	@Override
-	public ResponseVO getUserInfos(String code) {
-		String api = API_PREFIX + "/user";
-		HttpHeaders headers = new HttpHeaders();
-		String Authorization = getAccessToken(code);
-		log.info("api="+api);
-		log.info("Authorization="+Authorization);
-		headers.add("Authorization", Authorization);
-		HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
-		//{"code":1004,"message":"访问此资源需要完全的身份验证"}   token不传
-		/**
-		 * {
-			    "code": 1001,
-			    "message": "access_token无效"
-			}
-			token 已失效
-		 */
-		ResponseEntity<ResponseVO> obj = restTemplate.exchange(api.toString(), HttpMethod.GET, httpEntity, ResponseVO.class);
-		return ResponseVO.success(obj.getBody());
+	public ResponseVO<LoginUserVO> currrentUserInfo(String token) {
+		String api = API_PREFIX + "/oauth/check_token?token=%s";
+		ResponseEntity<String> obj = restTemplate.exchange(String.format(api, token), HttpMethod.GET, null, String.class);
+		String currentName=JSONObject.parseObject(obj.getBody()).getString("user_name");
+		log.info("当前账号=="+currentName);
+		LoginUserVO loginUserVO = new LoginUserVO();
+		User userPO = userRepository.findUserByAccount(currentName);
+		BeanUtils.copyPropertiesIgnoreNull(userPO, loginUserVO);
+		return ResponseVO.success(loginUserVO);
 	}
 
 }

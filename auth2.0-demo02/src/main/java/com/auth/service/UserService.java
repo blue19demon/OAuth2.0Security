@@ -1,8 +1,10 @@
 package com.auth.service;
 import java.util.List;
 
+import com.auth.domain.Token;
 import com.auth.dto.LoginUserDTO;
 import com.auth.dto.UserDTO;
+import com.auth.vo.LoginUserVO;
 import com.auth.vo.ResponseVO;
 import com.auth.vo.UserVO;
 
@@ -36,14 +38,11 @@ public interface UserService {
      */
     ResponseVO<List<UserVO>> findAllUserVO();
 
-    /**
-     * @description 用户登录
-     * @return
-     */
-    ResponseVO login(LoginUserDTO loginUserDTO);
 
-	ResponseVO getToken(String code);
+	ResponseVO<Token> getToken(String code);
+	
+	ResponseVO<Token> refreshToken(String refreshToken) ;
 
-	ResponseVO getUserInfos(String code);
+	ResponseVO<LoginUserVO> currrentUserInfo(String token);
 
 }

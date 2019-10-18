@@ -1,4 +1,4 @@
-package com.auth.vo;
+package com.auth.domain;
 import java.util.List;
 
 import lombok.Getter;
@@ -29,11 +29,14 @@ public class LoginUserVO {
      * 用户名
      */
     private String name;
-
+    /**
+     * 性别
+     */
     private String gender;
-
+    /**
+     * 头像
+     */
     private String headImageUrl;
-
 
 
 }

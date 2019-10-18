@@ -54,19 +54,26 @@
     </div>
 </div>
     <div class="container">
-         <h3 th:text="${clientId}+' 请求授权，该应用将获取你的以下信息'"></h3>
-        <p>昵称，头像和性别</p>
-         授权后表明你已同意 <a  href="#boot" style="color: #E9686B">OAUTH-BOOT 服务协议</a>
+        <p><span th:text="${appInfo.appName}"></span></p>
+        <p><img th:src="${appInfo.appIcon}" style="width: 60px;height: 60px;border-radius: 30px;"></p>
+        <h3 th:text="${clientId}+' 请求授权，该应用将获取你的以下信息'"></h3>
+        <div class="starter-template">
+		    <p>OAUTH-BOOT账号：<span th:text="${userInfo.account}"></span></p>
+			<p>昵称：<span th:text="${userInfo.name}"></span></p>
+            <p>头像：<img th:src="${userInfo.headImageUrl}" style="width: 60px;height: 60px;border-radius: 30px;">
+            <p>性别：<span th:text="${userInfo.gender}"></span></p>
+		</div>
+         授权后表明你已同意 <a href="#boot" style="color: #E9686B">OAUTH-BOOT 服务协议</a>
         <form method="post" action="/oauth/authorize">  
- 
         <input type="hidden" name="user_oauth_approval" value="true">
         <input type="hidden" name="_csrf" th:value="${_csrf.getToken()}"/>
  
         <div th:each="item:${scopes}">
-            <input type="radio" th:name="'scope.'+${item}" value="true" hidden="hidden" checked="checked"/>
+            <input type="radio" th:name="'scope.'+${item}" value="true" checked="checked"/> 同意/授权
+            <input type="radio" th:name="'scope.'+${item}" value="false" /> 取消/授权
         </div>
  
-        <button class="btn" type="submit"> 同意/授权</button>
+        <button class="btn" type="submit">提交</button>
  
     </form>
     </div>
