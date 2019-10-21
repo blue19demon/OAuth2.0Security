@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-oauth-client2
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.louis
+Build-Jdk: 1.8.0_77
+Implementation-URL: http://maven.apache.org/spring-oauth-client2
+Created-By: Maven Integration for Eclipse
+

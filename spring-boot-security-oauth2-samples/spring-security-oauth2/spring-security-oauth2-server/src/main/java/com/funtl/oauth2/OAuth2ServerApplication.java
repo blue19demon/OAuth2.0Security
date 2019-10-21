@@ -1,6 +1,7 @@
 package com.funtl.oauth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -10,6 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * Description:
  * </p>
  */
+
 @SpringBootApplication
 @MapperScan(basePackages = "com.funtl.oauth2.server.mapper")
 public class OAuth2ServerApplication {
