@@ -4,9 +4,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://127.0.0.1:3308/oauth2?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    jdbc-url: jdbc:mysql://127.0.0.1:3306/oauth2?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: 123456
+    password: root
     hikari:
       minimum-idle: 5
       idle-timeout: 600000
@@ -18,7 +18,7 @@ spring:
       connection-test-query: SELECT 1
 
 server:
-  port: 8080
+  port: 8070
 
 mybatis:
   type-aliases-package: com.funtl.oauth2.server.domain

@@ -4,9 +4,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3308/oauth2_resource?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/oauth2_resource?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: 123456
+    password: root
     hikari:
       minimum-idle: 5
       idle-timeout: 600000
@@ -22,13 +22,13 @@ security:
     client:
       client-id: client
       client-secret: secret
-      access-token-uri: http://localhost:8080/oauth/token
-      user-authorization-uri: http://localhost:8080/oauth/authorize
+      access-token-uri: http://localhost:8070/oauth/token
+      user-authorization-uri: http://localhost:8070/oauth/authorize
     resource:
-      token-info-uri: http://localhost:8080/oauth/check_token
+      token-info-uri: http://localhost:8070/oauth/check_token
 
 server:
-  port: 8081
+  port: 8071
   servlet:
     context-path: /contents
 
